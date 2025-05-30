@@ -56,7 +56,9 @@ public class AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
+        System.out.println("User");
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
+        System.out.println("User "+ user.getId());
         String accessToken = jwtUtil.generateAccessToken(user);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getEmail());
         return JwtResponseDTO.builder()
