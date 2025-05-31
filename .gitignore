@@ -1,5 +1,8 @@
 HELP.md
 
+Dockerfile
+docker-compose.yml
+
 application.properties
 .gradle
 build/
