@@ -71,12 +71,9 @@ This repository contains the **microservices-based architecture** for the Health
 
 ### ✅ Prerequisites
 
-- Java 17+
+- Java 19
 - Gradle
-- MySQL/PostgreSQL
-- Redis (optional)
-- Postman or Swagger for API testing
-- Docker (optional for containerized setup)
+- MySQL
 
 ---
 
@@ -84,58 +81,76 @@ This repository contains the **microservices-based architecture** for the Health
 
 > You can run each service individually, but a recommended setup is to start them in this order:
 
-1. **Config Server**
-```bash
-cd config-server
-./gradlew bootRun
-````
 
-2. **Eureka Server**
+1. **Eureka Server**
 
 ```bash
 cd eureka-server
 ./gradlew bootRun
 ```
 
-3. **API Gateway**
+2**API Gateway**
 
 ```bash
 cd api-gateway
 ./gradlew bootRun
 ```
 
-4. **Core Microservices (in any order after above)**
+3**Core Microservices (in any order after above)**
 
 ```bash
-cd user-service
+cd userservice
 ./gradlew bootRun
 
-cd doctor-service
+cd doctorservice
 ./gradlew bootRun
 
-cd appointment-service
+cd appointmentservice
 ./gradlew bootRun
 
-cd health-record-service
+cd prescriptionservice
 ./gradlew bootRun
 
-cd admin-service
+cd bodypartservice
 ./gradlew bootRun
 ```
 
 ---
 
-## ⚙️ Configuration
+### ⚙️ Configuration
 
-Each microservice fetches configuration from the **Config Server**, which pulls from a Git-based config repo.
+Each microservice should have its own `application.properties` file with the following base settings:
 
-Ensure your `application.yml` in each service points to:
+**Example `application.properties`:**
 
-```yaml
-spring:
-  config:
-    import: optional:configserver:http://localhost:8888
+```properties
+server.port=8081
+
+spring.application.name=userservice
+
+spring.datasource.url=jdbc:mysql://localhost:3306/healthcare_users
+spring.datasource.username=root
+spring.datasource.password=your_password
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
+
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka
 ```
+
+> 🔧 Update `application.properties` in each service according to:
+
+* `spring.application.name`
+* `server.port`
+* `spring.datasource.url`
+
+Make sure all services register correctly with **Eureka** and connect to their appropriate **MySQL** database schema.
+
+---
+
+
+
 
 ---
 
